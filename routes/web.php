@@ -1,7 +1,21 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
+
+
+
+Route::middleware("auth")->group(function () {
+    Route::view("/", "welcome")->name("h");
+});
+
+
+
+Route::get("/login", [AuthController::class, 'login'])->name("login");
+Route::post('/login', [AuthController::class,'loginPost'])->name("login.post");
+Route::get("/register", [AuthController::class,"register"])->name("register");
+Route::post("/register", [AuthController::class,"registerPost"])->name("register.post");
 
 /*
 |--------------------------------------------------------------------------
@@ -14,11 +28,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::get('/home', [PageController::class,'home']);
+Route::get('/home', [PageController::class,'home'])->name("home");
 
 Route::get('/service', [PageController::class,'service']);
 Route::get('/show/{id}', [PageController::class,'show']);
