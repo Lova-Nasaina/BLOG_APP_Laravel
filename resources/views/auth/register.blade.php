@@ -18,7 +18,7 @@
                     @endif
 
                     @if (session()->has("error"))
-                    <div class="alert alert-success">
+                    <div class="alert alert-danger">
                         {{ session()->get("error") }}
                     </div>
                     @endif
@@ -68,7 +68,7 @@
                         </div>
                     </form>
                     <div class="text-center mt-3">
-                        <p>Already have an account? <a href="/">Login</a></p>
+                        <p>Already have an account? <a href="/login">Login</a></p>
                     </div>
                 </div>
             </div>
