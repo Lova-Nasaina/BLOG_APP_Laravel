@@ -9,6 +9,22 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
+    public function profilPage(){
+        return view("compte.profil", ['user' => Auth::user()]);
+    }
+
+    public function logout(Request $request){
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect("/login");
+    }
+
+    public  function home(){
+        return view('page.home', ['user' => Auth::user()]);
+    }
+
     public function login(){
         return view("auth.login");
     }
@@ -21,7 +37,8 @@ class AuthController extends Controller
 
         $data = $request->only("email", "password");
         if(Auth::attempt($data)){
-            return redirect()->with(route("h"));
+            $request->session()->regenerate();
+            return redirect()->intended(route("home"));
         }
 
         return redirect(route("login"))->with("error", "Login failed");
@@ -53,8 +70,5 @@ class AuthController extends Controller
     }
 
 
-    public function logout(){
-
-    }
 
 }
