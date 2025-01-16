@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use Session;
@@ -53,9 +54,6 @@ class PageController extends Controller
         return view("page.editProduct")->with('produit', $produit);
     }
 
-    public  function home(){
-        return view('page.home');
-    }
 
     public function service(){
 
@@ -82,10 +80,13 @@ class PageController extends Controller
     }
 
     public function createproduct(){
-        return view('page.create');
+        return view('page.create', ['user' => Auth::user()]);
     }
 
     public function saveproduct(Request $request){
+
+        print('données :' . $request->product_name .' '. $request->product_price .' '.$request->description);
+        print('données :' . $request->user_id.'  '. $request->product_image  );
 
         // $produit = new Product();
 
@@ -98,18 +99,29 @@ class PageController extends Controller
         // AUTRE METHODE D'INSERTION DES DONNEES
         $data = array();
 
+        $imageName = time() . '.' . $request->product_image->extension();
+        $request->product_image->move(public_path('images/profiles'), $imageName);
+
+
+        $data['user_id'] = $request->user_id;
         $data['product_name'] = $request->product_name;
         $data['product_price'] = $request->product_price;
         $data['description'] = $request->description;
+        $data['photos'] = $imageName;
 
         DB::table('products')
             ->insert($data);
+        $data_insert = TRUE;
 
+        if ($data_insert){
+                return redirect(route("home"))->with("success","Produit publier avec succès");
+            }
 
+        return redirect("/createproduct")->with("error", "Produit non publier");
 
-        // Session::put('message', 'Les produits '.$request->product_name.'a été inseré avec succès');
-        session(['message'=> 'Les produits '.$request->product_name.'a été inseré avec succès']);
-        return redirect("/createproduct");
+        // // Session::put('message', 'Les produits '.$request->product_name.'a été inseré avec succès');
+        // session(['message'=> 'Les produits '.$request->product_name.'a été inseré avec succès']);
+        // return redirect("/createproduct");
     }
 
 }
