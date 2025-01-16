@@ -10,22 +10,9 @@
 </head>
 <body>
 
-    @if(session('message'))
-        <p class="alert alert-success">
-            {{ session('message') }}
-        </p>
-        @php
-            Session::forget('message');
-        @endphp
+{{-- <div class="container">
+    <form  method="POST" class="form-horizontal">
 
-    @else
-        <p class="alert alert-danger">
-            auccun donnée trouver
-        </p>
-    @endif
-
-    <form action="{{ url('/saveproduct') }}" method="POST" class="form-horizontal">
-        {{ csrf_field() }}
         <div class="form-group">
             <label for="">Nom Produit</label>
             <input type="text"  name="product_name" placeholder="Nom produit" class="form-control">
@@ -41,5 +28,76 @@
         <input type="submit" value="Ajout Produit" class="btn btn-primary">
 
     </form>
+
+</div> --}}
+
+
+
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-dark text-white text-center">
+                    <h3>Publier un Produit</h3>
+                    <p class="mb-0">Remplissez les champs pour partager votre produit</p>
+                </div>
+                <div class="card-body">
+                    @if (session()->has("success"))
+                    <div class="alert alert-success">
+                        {{ session()->get("success") }}
+                    </div>
+                    @endif
+
+                    @if (session()->has("error"))
+                    <div class="alert alert-danger">
+                        {{ session()->get("error") }}
+                    </div>
+                    @endif
+
+                    <form action="{{ url('/saveproduct') }}" method="POST" enctype="multipart/form-data">
+                        {{ csrf_field() }}
+
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        {{-- <input type="hidden" name="user_id" value="{{  }}"> --}}
+                        <input type="hidden" value="{{ $user->id }}" name="user_id">
+                        <!-- Nom -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nom produit</label>
+                            <input type="text" class="form-control" id="name" name="product_name" placeholder="Nom de votre produit" required>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Prix produit</label>
+                            <input type="number" class="form-control" id="email" name="product_price" placeholder="Prix de votre produit" required>
+                        </div>
+
+                        <!-- Mot de passe -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="password" name="description" placeholder="Description de votre produit" required>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="profile_image" class="form-label">Image Produit</label>
+                            <input type="file" class="form-control" id="product_image" name="product_image" required>
+                        </div>
+
+                        <!-- Bouton d'inscription -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Ajouté</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <p>Revenir à <a href="{{ url('/home') }}" class="text-primary">Page d'acceuil</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

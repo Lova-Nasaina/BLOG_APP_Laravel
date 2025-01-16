@@ -23,7 +23,7 @@
                     </div>
                     @endif
 
-                    <form method="post" action="{{ route("register.post") }}">
+                    <form method="post" action="{{ route("register.post") }}" enctype="multipart/form-data">
 
                         @csrf
 
@@ -60,6 +60,15 @@
                             @if ($errors->has('repeatpwd'))
                         <span class="text-danger">
                             {{ $errors->first('repeatpwd') }}
+                        </span>
+                        @endif
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Profil Photo</label>
+                            <input type="file" class="form-control" id="photo" name="photo" placeholder="Photo profil" required>
+                        @if ($errors->has('photo'))
+                        <span class="text-danger">
+                            {{ $errors->first('photo') }}
                         </span>
                         @endif
                         </div>
